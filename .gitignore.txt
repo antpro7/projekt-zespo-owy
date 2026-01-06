@@ -1,0 +1,11 @@
+# Backend
+**/bin/
+**/obj/
+**/appsettings.Development.json
+**/*.user
+
+# Frontend
+**/node_modules/
+**/dist/
+**/.DS_Store
+.vscode/
