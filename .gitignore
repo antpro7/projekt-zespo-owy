@@ -1,0 +1,22 @@
+# Visual Studio
+**/.vs/
+**/bin/
+**/obj/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+
+# Backend
+**/appsettings.Development.json
+**/appsettings.*.json
+!**/appsettings.json
+
+# Frontend
+**/node_modules/
+**/dist/
+**/.DS_Store
+
+# IDEs
+.vscode/
+.idea/
