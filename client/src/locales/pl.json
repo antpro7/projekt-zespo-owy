@@ -32,7 +32,9 @@
         "employee": "Pracownik",
         "loading": "Ładowanie...",
         "no_data": "Brak danych.",
-        "to": "do"
+        "to": "do",
+        "firstname": "Imię",
+        "lastname": "Nazwisko"
     },
     "status": {
         "Pending": "Oczekujący",
@@ -108,11 +110,9 @@
         "start_date": "Data początkowa",
         "end_date": "Data końcowa",
         "types": {
-            "Annual": "Urlop wypoczynkowy",
-            "Sick": "Zwolnienie lekarskie",
-            "Maternity": "Urlop macierzyński",
-            "Paternity": "Urlop ojcowski",
-            "undefined": "Nieokreślony"
+            "Annual": "Wypoczynkowy",
+            "Sick": "Chorobowy",
+            "Unpaid": "Bezpłatny"
         }
     },
     "admin": {
@@ -121,7 +121,8 @@
             "add_btn": "Dodaj pracownika",
             "table": {
                 "id": "ID",
-                "name": "Imię i nazwisko",
+                "firstName": "Imię",
+                "lastName": "Nazwisko",
                 "email": "Email",
                 "role": "Rola",
                 "position": "Stanowisko",

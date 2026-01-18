@@ -1,57 +1,63 @@
 import api from './api';
 
-// Pobierz wszystkich pracowników
 export const getEmployees = async () => {
     try {
-        const response = await api.get('/Users'); // Upewnij się, że endpoint to /Users lub /Employees
+        const response = await api.get('/api/Users');
         return response.data;
     } catch (error) {
-        console.error("Błąd pobierania pracowników:", error);
+        console.error('Error fetching employees:', error);
         return [];
     }
 };
 
-// Pobierz tylko managerów (potrzebne do listy rozwijanej w modalu)
+export const getEmployeeById = async (id) => {
+    try {
+        const response = await api.get(`/api/Users/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching employee ${id}:`, error);
+        return null;
+    }
+};
+
 export const getManagers = async () => {
     try {
-        const response = await api.get('/Users');
-        // Filtrujemy użytkowników, którzy mają rolę manager
-        return response.data.filter(u => u.role === 'manager');
+        const employees = await getEmployees();
+        return employees.filter(e => e.role === 'manager');
     } catch (error) {
-        console.error("Błąd pobierania managerów:", error);
+        console.error('Error fetching managers:', error);
         return [];
     }
 };
 
-// DODAWANIE nowego pracownika
-export const createEmployee = async (employeeData) => {
+export const getEmployeesByManagerId = async (managerId) => {
     try {
-        const response = await api.post('/Users', employeeData);
-        return response.data;
+        const employees = await getEmployees();
+        // Assuming the backend User model has a managerId field
+        return employees.filter(e => e.managerId === managerId);
     } catch (error) {
-        console.error("Błąd podczas tworzenia pracownika:", error);
-        throw error;
+        console.error(`Error fetching employees for manager ${managerId}:`, error);
+        return [];
     }
 };
 
-// AKTUALIZACJA pracownika (Tego brakowało!)
-export const updateEmployee = async (id, employeeData) => {
+export const createEmployee = async (employee) => {
+    console.warn('createEmployee: Backend does not provide a create user endpoint in the provided list. Please check if Registration endpoint exists.');
+    // If there is no specific endpoint, we might return null or throw error.
+    return null;
+};
+
+export const updateEmployee = async (id, employee) => {
     try {
-        const response = await api.put(`/Users/${id}`, employeeData);
+        const response = await api.put(`/api/Users/${id}`, employee);
         return response.data;
     } catch (error) {
-        console.error(`Błąd podczas aktualizacji pracownika o ID ${id}:`, error);
-        throw error;
+        console.error(`Error updating employee ${id}:`, error);
+        return null;
     }
 };
 
-// Reset hasła
-export const resetPassword = async (userId) => {
-    try {
-        const response = await api.post(`/Users/${userId}/reset-password`);
-        return response.data;
-    } catch (error) {
-        console.error("Błąd resetowania hasła:", error);
-        throw error;
-    }
+export const deleteEmployee = async (id) => {
+    console.warn('deleteEmployee: Backend does not provide a delete user endpoint.');
+    return false;
 };

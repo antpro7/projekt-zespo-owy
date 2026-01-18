@@ -32,7 +32,9 @@
         "employee": "Employee",
         "loading": "Loading...",
         "no_data": "No data available.",
-        "to": "to"
+        "to": "to",
+        "firstname": "First Name",
+        "lastname": "Last Name"
     },
     "status": {
         "Pending": "Pending",
@@ -119,7 +121,8 @@
             "add_btn": "Add Employee",
             "table": {
                 "id": "ID",
-                "name": "Name",
+                "firstName": "First Name",
+                "lastName": "Last Name",
                 "email": "Email",
                 "role": "Role",
                 "position": "Position",

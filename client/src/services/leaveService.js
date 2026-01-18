@@ -1,51 +1,80 @@
 import api from './api';
+import { getEmployeesByManagerId } from './employeeService';
 
-// 1. Pobieranie wszystkich wniosków
 export const getAllLeaves = async () => {
     try {
-        const response = await api.get('/Leaves');
+        const response = await api.get('/api/Leaves');
         return response.data;
     } catch (error) {
-        console.error("Błąd pobierania wszystkich wniosków:", error);
+        console.error('Error fetching all leaves:', error);
         return [];
     }
 };
 
-// 2. Pobieranie wniosków konkretnego użytkownika
 export const getLeavesByUserId = async (userId) => {
     try {
-        const response = await api.get(`/Leaves/user/${userId}`);
+        const response = await api.get(`/api/Leaves/user/${userId}`);
         return response.data;
     } catch (error) {
-        console.error(`Błąd wniosków użytkownika ${userId}:`, error);
+        console.error(`Error fetching leaves for user ${userId}:`, error);
         return [];
     }
 };
 
-// 3. Składanie nowego wniosku
-export const createLeaveRequest = async (leaveData) => {
-    const response = await api.post('/Leaves', leaveData);
-    return response.data;
+export const createLeaveRequest = async (request) => {
+    try {
+        const response = await api.post('/api/Leaves', request);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating leave request:', error);
+        return null;
+    }
 };
 
-// 4. Aktualizacja statusu (PUT)
 export const updateLeaveStatus = async (id, status) => {
-    const response = await api.put(`/Leaves/${id}/status?status=${status}`);
-    return response.data;
+    try {
+        // Changing to query parameter as body apparently didn't work.
+        // Pattern: PUT /api/Leaves/{id}/status?status=Approved
+        const response = await api.put(`/api/Leaves/${id}/status`, null, {
+            params: { status: status }
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error updating leave status ${id}:`, error);
+        return null;
+    }
 };
 
-// 5. TEGO BRAKOWAŁO: Pobieranie wniosków dla konkretnego managera
+export const getPendingLeaves = async () => {
+    try {
+        const leaves = await getAllLeaves();
+        return leaves.filter(l => l.status === 'Pending');
+    } catch (error) {
+        console.error('Error fetching pending leaves:', error);
+        return [];
+    }
+};
+
 export const getLeavesByManagerId = async (managerId) => {
     try {
-        const response = await api.get('/Leaves');
-        const allLeaves = response.data;
-        // Filtrujemy wnioski, sprawdzając managerId w obiekcie user
-        return allLeaves.filter(leaf => {
-            const userObj = leaf.user || leaf.User;
-            return userObj && (userObj.managerId === managerId || userObj.ManagerId === managerId);
-        });
+        const myEmployees = await getEmployeesByManagerId(managerId);
+        const myEmployeeIds = myEmployees.map(e => e.id);
+        const allLeaves = await getAllLeaves(); // Optimization: backend should ideally support filtering
+        return allLeaves.filter(l => myEmployeeIds.includes(l.userId));
     } catch (error) {
-        console.error("Błąd pobierania wniosków managera:", error);
+        console.error(`Error fetching leaves for manager ${managerId}:`, error);
+        return [];
+    }
+};
+
+export const getPendingLeavesByManagerId = async (managerId) => {
+    try {
+        const myEmployees = await getEmployeesByManagerId(managerId);
+        const myEmployeeIds = myEmployees.map(e => e.id);
+        const allLeaves = await getAllLeaves();
+        return allLeaves.filter(l => myEmployeeIds.includes(l.userId) && l.status === 'Pending');
+    } catch (error) {
+        console.error(`Error fetching pending leaves for manager ${managerId}:`, error);
         return [];
     }
 };
