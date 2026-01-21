@@ -11,6 +11,7 @@ namespace projekt.ResponseModel
         public string LastName { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
 
+        public bool ChangePasswordRequired { get; set; }
         public AuthModel Tokens { get; set; } = new AuthModel();
 
         public UserResponseModel(User user,AuthModel auth)
@@ -21,6 +22,7 @@ namespace projekt.ResponseModel
             this.LastName = user.LastName;
             this.Role = user.Role;
             this.Tokens = auth;
+            this.ChangePasswordRequired = user.ChangePasswordRequired;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace projekt.ResponseModel
         public int ManagerId { get; set; }
         public int MonthlyHours { get; set; } = 160;
         public int LeaveBalance { get; set; } = 26;
+        public bool ChangePasswordRequired { get; set; }
         public UserDataResponseModel(User user)
         {
             this.Id = user.Id;
@@ -26,6 +27,7 @@ namespace projekt.ResponseModel
             this.MonthlyHours = user.MonthlyHours;
             this.LeaveBalance = user.LeaveBalance;
             this.ManagerId = user.ManagerId ?? 0;
+            this.ChangePasswordRequired = user.ChangePasswordRequired;
 
         }
     }
