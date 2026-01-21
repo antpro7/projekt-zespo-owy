@@ -80,6 +80,9 @@ namespace projekt.Controllers
             user.Email = updatedUser.Email;
             user.Position = updatedUser.Position;
             user.UpdatedAt = DateTime.Now;
+            user.ContractType = updatedUser.ContractType;
+            user.MonthlyHours = updatedUser.MonthlyHours;
+            user.LeaveBalance = updatedUser.LeaveBalance;
             user.ManagerId = updatedUser.ManagerId;
 
             await _context.SaveChangesAsync();
