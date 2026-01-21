@@ -96,7 +96,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
