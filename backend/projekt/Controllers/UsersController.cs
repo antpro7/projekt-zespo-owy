@@ -80,6 +80,7 @@ namespace projekt.Controllers
             user.Email = updatedUser.Email;
             user.Position = updatedUser.Position;
             user.UpdatedAt = DateTime.Now;
+            user.ManagerId = updatedUser.ManagerId;
 
             await _context.SaveChangesAsync();
             return Ok(new UserDataResponseModel(user));
