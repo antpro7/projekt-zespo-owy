@@ -13,6 +13,13 @@ namespace projekt.ResponseModel
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public int DaysCount
+        {
+            get
+            {
+                return (EndDate - StartDate).Days + 1;
+            }
+        }
         public UserDataResponseModel? User { get; set; }
         public LeaveResponseModel(LeaveRequest leaveRequest)
         {
