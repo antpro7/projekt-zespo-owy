@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using projekt.Data;
 using projekt.Models;
+using projekt.ResponseModel;
 
 namespace projekt.Controllers
 {
@@ -24,7 +25,12 @@ namespace projekt.Controllers
             {
                 // Pobieramy wszystkich użytkowników
                 var users = await _context.Users.ToListAsync();
-                return Ok(users);
+                var responseModel = new List<UserDataResponseModel>();
+                foreach (var user in users)
+                {
+                    responseModel.Add(new UserDataResponseModel(user));
+                }
+                return Ok(responseModel);
             }
             catch (Exception ex)
             {
@@ -48,11 +54,11 @@ namespace projekt.Controllers
                     return NotFound(new { message = "Nie znaleziono użytkownika" });
                 }
 
-                return Ok(user);
+                return Ok(new UserDataResponseModel(user));
             }
             catch (Exception ex)
             {
-                
+
                 return StatusCode(500, $"Błąd serwera: {ex.Message}");
             }
         }
@@ -74,7 +80,8 @@ namespace projekt.Controllers
             user.UpdatedAt = DateTime.Now;
 
             await _context.SaveChangesAsync();
-            return Ok(user);
+            return Ok(new UserDataResponseModel(user));
+
         }
     }
 }

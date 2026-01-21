@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using projekt.Data;
 using projekt.Models;
+using projekt.ResponseModel;
 
 namespace projekt.Controllers
 {
@@ -24,7 +25,8 @@ namespace projekt.Controllers
                 .Include(l => l.User) // Dołącza dane użytkownika (imię, nazwisko)
                 .OrderByDescending(l => l.CreatedAt)
                 .ToListAsync();
-            return Ok(leaves);
+            var leavesResponseModel = leaves.Select(l => new LeaveResponseModel(l));
+            return Ok(leavesResponseModel);
         }
 
         // 2. Pobieranie wniosków konkretnego użytkownika (Historia pracownika)
@@ -35,7 +37,8 @@ namespace projekt.Controllers
                 .Where(l => l.UserId == userId)
                 .OrderByDescending(l => l.CreatedAt)
                 .ToListAsync();
-            return Ok(leaves);
+            var leavesResponseModel= leaves.Select(l => new LeaveResponseModel(l));
+            return Ok(leavesResponseModel);
         }
 
         // 3. Składanie nowego wniosku
