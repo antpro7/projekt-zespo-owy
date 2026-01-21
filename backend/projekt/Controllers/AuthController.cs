@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using projekt.Data;
 using projekt.Models;
+using projekt.RequestModel;
+using projekt.ResponseModel;
+using projekt.Services.Interfaces;
 
 namespace projekt.Controllers
 {
@@ -10,38 +13,26 @@ namespace projekt.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IAuthService _authService;
 
-        public AuthController(AppDbContext context)
+        public AuthController(AppDbContext context, IAuthService authService)
         {
             _context = context;
+            _authService = authService;
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
-            // Szukamy użytkownika w bazie
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == request.Email && u.PasswordHash == request.Password);
+            var user = await _authService.Authenticate(request.Email, request.Password);
 
             if (user == null)
             {
                 return Unauthorized(new { message = "Invalid credentials" });
             }
 
-            return Ok(new
-            {
-                id = user.Id,
-                email = user.Email,
-                name = $"{user.FirstName} {user.LastName}",
-                role = user.Role
-            });
+            return Ok(new UserResponseModel(user));
         }
-    }
 
-    // Ta klasa MUSI być poza klamrami AuthController, ale wewnątrz namespace
-    public class LoginRequest
-    {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
     }
 }

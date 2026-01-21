@@ -2,12 +2,19 @@ using Microsoft.EntityFrameworkCore;
 using projekt.Data;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using projekt;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+//get config from secrets
+builder.Services.Configure<AuthConfig>(builder.Configuration.GetSection("AuthConfig")); 
 
 // Konfiguracja bazy danych
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//Services
+builder.Services.AddTransient<projekt.Services.Interfaces.IAuthService, projekt.Services.AuthService>();
 
 // KLUCZOWA KONFIGURACJA JSON
 builder.Services.AddControllers()

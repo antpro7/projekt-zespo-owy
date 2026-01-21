@@ -10,6 +10,7 @@ namespace projekt.Data
         // Tabele w bazie danych
         public DbSet<User> Users { get; set; }
         public DbSet<LeaveRequest> LeaveRequests { get; set; }
+        public DbSet<UserAuth> UserAuths { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +29,10 @@ namespace projekt.Data
             // Konfiguracja autoincrement dla User.Id (opcjonalnie, jeśli nie działa)
             modelBuilder.Entity<User>()
                 .Property(u => u.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<UserAuth>()
+                .Property(ua => ua.Id)
                 .ValueGeneratedOnAdd();
 
             // SEED DATA - Użytkownicy

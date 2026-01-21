@@ -18,12 +18,12 @@ namespace projekt.Migrations
                 columns: new[] { "Id", "ChangePasswordRequired", "ContractType", "CreatedAt", "Email", "FirstName", "LastName", "LeaveBalance", "ManagerId", "MonthlyHours", "PasswordHash", "Position", "Role", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, false, "B2B", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@example.com", "Admin", "User", 26, null, 160, "password", "Administrator", "admin", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, false, "UoP", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "alice@example.com", "Manager", "Alice", 26, null, 160, "password", "Team Lead 1", "manager", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, false, "UoP", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "emily@example.com", "Manager", "Emily", 26, null, 160, "password", "Team Lead 2", "manager", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 4, false, "UoP", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "john@example.com", "John", "Doe", 20, 2, 160, "password", "Developer", "employee", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, false, "UoP", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "jane@example.com", "Jane", "Smith", 20, 3, 160, "password", "Designer", "employee", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 6, false, "UoP", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "bob@example.com", "Bob", "Johnson", 20, 2, 160, "password", "QA Engineer", "employee", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 1, false, "B2B", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@example.com", "Admin", "User", 26, null, 160, BCrypt.Net.BCrypt.HashPassword("password"), "Administrator", "admin", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, false, "UoP", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "alice@example.com", "Manager", "Alice", 26, null, 160, BCrypt.Net.BCrypt.HashPassword("password"), "Team Lead 1", "manager", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, false, "UoP", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "emily@example.com", "Manager", "Emily", 26, null, 160, BCrypt.Net.BCrypt.HashPassword("password"), "Team Lead 2", "manager", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, false, "UoP", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "john@example.com", "John", "Doe", 20, 2, 160,BCrypt.Net.BCrypt.HashPassword("password"), "Developer", "employee", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, false, "UoP", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "jane@example.com", "Jane", "Smith", 20, 3, 160, BCrypt.Net.BCrypt.HashPassword("password"), "Designer", "employee", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 6, false, "UoP", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "bob@example.com", "Bob", "Johnson", 20, 2, 160, BCrypt.Net.BCrypt.HashPassword("password"), "QA Engineer", "employee", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
