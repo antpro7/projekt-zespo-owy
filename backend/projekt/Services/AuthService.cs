@@ -139,6 +139,7 @@ namespace projekt.Services
             }
             string newHashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
             user.PasswordHash = newHashedPassword;
+            user.ChangePasswordRequired = false;
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
             return true;
