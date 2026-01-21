@@ -38,7 +38,7 @@ namespace projekt.Controllers
             return Ok(new UserResponseModel(user, tokens));
         }
         [HttpPost("logout/{userId}")]
-        public async Task<IActionResult> Logout([FromQuery] int userId)
+        public async Task<IActionResult> Logout(int userId)
         {
             var result = await _authService.RevokeTokens(userId);
             if (!result)
