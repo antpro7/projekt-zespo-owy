@@ -12,7 +12,7 @@ namespace projekt.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "UserAuth",
+                name: "UserAuths",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -27,7 +27,7 @@ namespace projekt.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserAuth", x => x.Id);
+                    table.PrimaryKey("PK_UserAuths", x => x.Id);
                 });
         }
 
@@ -35,7 +35,7 @@ namespace projekt.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "UserAuth");
+                name: "UserAuths");
         }
     }
 }

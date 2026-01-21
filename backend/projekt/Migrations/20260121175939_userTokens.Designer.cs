@@ -12,7 +12,7 @@ using projekt.Data;
 namespace projekt.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260121172727_userTokens")]
+    [Migration("20260121175939_userTokens")]
     partial class userTokens
     {
         /// <inheritdoc />
@@ -333,7 +333,7 @@ namespace projekt.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserAuth");
+                    b.ToTable("UserAuths");
                 });
 
             modelBuilder.Entity("projekt.Models.LeaveRequest", b =>

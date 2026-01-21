@@ -47,6 +47,7 @@ namespace projekt.Services
         public async Task<bool> ValidateToken(int userId, string token)
         {
             var userAuth = await _context.UserAuths
+                .AsNoTracking()
                 .Where(ua => ua.UserId == userId && !ua.IsRevoked && ua.ExpiresAt > DateTime.Now)
                 .OrderByDescending(ua => ua.ExpiresAt)
                 .FirstOrDefaultAsync();
@@ -54,11 +55,12 @@ namespace projekt.Services
             {
                 return false;
             }
-            return BCrypt.Net.BCrypt.Verify(token, userAuth.TokenHash);
+            return token == userAuth.TokenHash;
         }
         public async Task<bool> ValidateRefreshToken(int userId, string refreshToken)
         {
             var userAuth = await _context.UserAuths
+                .AsNoTracking()
                 .Where(ua => ua.UserId == userId && !ua.RefreshTokenIsRevoked && ua.RefreshTokenExpiresAt > DateTime.Now)
                 .OrderByDescending(ua => ua.RefreshTokenExpiresAt)
                 .FirstOrDefaultAsync();
@@ -66,7 +68,7 @@ namespace projekt.Services
             {
                 return false;
             }
-            return BCrypt.Net.BCrypt.Verify(refreshToken, userAuth.RefreshTokenHash);
+            return refreshToken == userAuth.RefreshTokenHash;
         }
         public async Task<bool> RevokeTokens(int userId)
         {
@@ -79,8 +81,7 @@ namespace projekt.Services
             }
             foreach (var userAuth in userAuths)
             {
-                userAuth.IsRevoked = true;
-                userAuth.RefreshTokenIsRevoked = true;
+                _context.Remove(userAuth);
             }
             await _context.SaveChangesAsync();
             return true;
@@ -103,16 +104,16 @@ namespace projekt.Services
         public async Task<AuthModel> GenerateTokensForUser(User user)
         {
             var accessToken = GenerateTokenForUser(user, _authConfig.AccessTokenDuration);
-            var refreshToken = GenerateTokenForUser(user, _authConfig.RefreshTokenDuration);
+            var refreshToken = GenerateTokenForUser(user, _authConfig.RefreshTokenDuration, true);
 
             var userAuth = new UserAuth
             {
                 UserId = user.Id,
-                TokenHash = BCrypt.Net.BCrypt.HashPassword(accessToken),
-                ExpiresAt = DateTime.Now.AddMinutes(_authConfig.AccessTokenDuration),
+                TokenHash = accessToken,
+                ExpiresAt = DateTime.Now.AddSeconds(_authConfig.AccessTokenDuration),
                 IsRevoked = false,
-                RefreshTokenHash = BCrypt.Net.BCrypt.HashPassword(refreshToken),
-                RefreshTokenExpiresAt = DateTime.Now.AddMinutes(_authConfig.RefreshTokenDuration),
+                RefreshTokenHash = refreshToken,
+                RefreshTokenExpiresAt = DateTime.Now.AddSeconds(_authConfig.RefreshTokenDuration),
                 RefreshTokenIsRevoked = false
             };
             _context.UserAuths.Add(userAuth);
@@ -125,10 +126,10 @@ namespace projekt.Services
                 RefreshTokenExpiresIn = _authConfig.RefreshTokenDuration
             };
         }
-        private string GenerateTokenForUser(User user, int duration)
+        private string GenerateTokenForUser(User user, int duration, bool isrefresh = false)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authConfig.Key));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
@@ -140,8 +141,10 @@ namespace projekt.Services
             };
             var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(duration),
-                signingCredentials: credentials
+                expires: DateTime.Now.AddSeconds(duration),
+                signingCredentials: credentials,
+                audience: isrefresh ? _authConfig.RefreshAudience : _authConfig.Audience,
+                issuer: _authConfig.Issuer
             );
             return new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token);
         }

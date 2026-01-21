@@ -330,7 +330,7 @@ namespace projekt.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserAuth");
+                    b.ToTable("UserAuths");
                 });
 
             modelBuilder.Entity("projekt.Models.LeaveRequest", b =>

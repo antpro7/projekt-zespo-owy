@@ -1,4 +1,5 @@
-﻿using projekt.Models;
+﻿using projekt.Helpers;
+using projekt.Models;
 
 namespace projekt.ResponseModel
 {
@@ -10,13 +11,16 @@ namespace projekt.ResponseModel
         public string LastName { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
 
-        public UserResponseModel(User user)
+        public AuthModel Tokens { get; set; } = new AuthModel();
+
+        public UserResponseModel(User user,AuthModel auth)
         {
             this.Id = user.Id;
             this.Email = user.Email;
             this.FirstName = user.FirstName;
             this.LastName = user.LastName;
             this.Role = user.Role;
+            this.Tokens = auth;
         }
     }
 }
