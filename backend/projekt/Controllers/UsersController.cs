@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using projekt.Data;
 using projekt.Models;
+using projekt.RequestModel;
 using projekt.ResponseModel;
 
 namespace projekt.Controllers
@@ -65,9 +66,8 @@ namespace projekt.Controllers
 
         // 3. Aktualizacja danych użytkownika (Opcjonalne - do edycji profilu)
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDataRequest updatedUser)
         {
-            if (id != updatedUser.Id) return BadRequest();
 
             var user = await _context.Users.FindAsync(id);
             if (user == null) return NotFound();
@@ -82,6 +82,37 @@ namespace projekt.Controllers
             await _context.SaveChangesAsync();
             return Ok(new UserDataResponseModel(user));
 
+        }
+        [HttpPost("add")]
+        public async Task<IActionResult> AddUser([FromBody] UserDataRequest newUser)
+        {
+            try
+            {
+                var newUserEntity = new User
+                {
+                    Email = newUser.Email,
+                    FirstName = newUser.FirstName,
+                    LastName = newUser.LastName,
+                    Role = newUser.Role,
+                    Position = newUser.Position,
+                    ContractType = newUser.ContractType,
+                    MonthlyHours = newUser.MonthlyHours,
+                    LeaveBalance = newUser.LeaveBalance,
+                    ManagerId = newUser.ManagerId
+                };
+
+                newUserEntity.PasswordHash = BCrypt.Net.BCrypt.HashPassword("password");
+                newUserEntity.ChangePasswordRequired = true;
+                newUserEntity.CreatedAt = DateTime.Now;
+                newUserEntity.UpdatedAt = DateTime.Now;
+                _context.Users.Add(newUserEntity);
+                await _context.SaveChangesAsync();
+                return Ok(new UserDataResponseModel(newUserEntity));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Błąd serwera: {ex.Message}");
+            }
         }
     }
 }
