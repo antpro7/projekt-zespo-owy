@@ -81,6 +81,7 @@ namespace projekt.Controllers
             }
             string newHashedPassword = BCrypt.Net.BCrypt.HashPassword("password");
             user.PasswordHash = newHashedPassword;
+            user.ChangePasswordRequired = true;
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
             return Ok(new { message = "Password reset successfully" });
