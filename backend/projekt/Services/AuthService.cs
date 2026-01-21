@@ -126,6 +126,23 @@ namespace projekt.Services
                 RefreshTokenExpiresIn = _authConfig.RefreshTokenDuration
             };
         }
+        public async Task<bool> ChangePassword(int userId, string oldPassword, string newPassword)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return false;
+            }
+            if (await VerifyPassword(userId, oldPassword) != null)
+            {
+                return false;
+            }
+            string newHashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.PasswordHash = newHashedPassword;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return true;
+        }
         private string GenerateTokenForUser(User user, int duration, bool isrefresh = false)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authConfig.Key));

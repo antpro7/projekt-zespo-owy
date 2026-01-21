@@ -58,7 +58,32 @@ namespace projekt.Controllers
             }
             return Ok(newTokens);
         }
+        [AllowAnonymous]
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            var result = await _authService.ChangePassword(request.UserId, request.CurrentPassword, request.NewPassword);
+            if (!result)
+            {
+                return BadRequest(new { message = "Failed to change password" });
+            }
+            return Ok(new { message = "Password changed successfully" });
 
-
+        }
+        [AllowAnonymous]
+        [HttpPatch("resetPassword/{userId}")]
+        public async Task<IActionResult> ResetPassword(int userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+            string newHashedPassword = BCrypt.Net.BCrypt.HashPassword("password");
+            user.PasswordHash = newHashedPassword;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Password reset successfully" });
+        }
     }
 }

@@ -12,5 +12,6 @@ namespace projekt.Services.Interfaces
         Task<AuthModel> GenerateTokensForUser(User user);
         Task<AuthModel> RefreshTokens(int userId, string refreshToken);
         Task<bool> RevokeTokens(int userId);
+        Task<bool> ChangePassword(int userId,string oldPassword, string newPassword);
     }
 }
