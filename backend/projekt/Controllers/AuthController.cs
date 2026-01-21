@@ -27,14 +27,14 @@ namespace projekt.Controllers
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
             var user = await _authService.Authenticate(request.Email, request.Password);
-            var auth = await _authService.RevokeTokens(user.Id);
-            var tokens = await _authService.GenerateTokensForUser(user);
-
-            if (user == null)
+            if(user == null)
             {
                 return Unauthorized(new { message = "Invalid credentials" });
             }
+            var auth = await _authService.RevokeTokens(user.Id);
+            var tokens = await _authService.GenerateTokensForUser(user);
 
+ 
             return Ok(new UserResponseModel(user, tokens));
         }
         [HttpPost("logout/{userId}")]
