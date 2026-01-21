@@ -11,7 +11,7 @@ namespace projekt.ResponseModel
         public string Role { get; set; }
         public string? Position { get; set; }
         public string? ContractType { get; set; }
-
+        public int ManagerId { get; set; }
         public int MonthlyHours { get; set; } = 160;
         public int LeaveBalance { get; set; } = 26;
         public UserDataResponseModel(User user)
@@ -25,6 +25,7 @@ namespace projekt.ResponseModel
             this.ContractType = user.ContractType ?? string.Empty;
             this.MonthlyHours = user.MonthlyHours;
             this.LeaveBalance = user.LeaveBalance;
+            this.ManagerId = user.ManagerId ?? 0;
 
         }
     }
