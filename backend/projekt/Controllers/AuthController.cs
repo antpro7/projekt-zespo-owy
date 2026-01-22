@@ -54,7 +54,7 @@ namespace projekt.Controllers
             var newTokens = await _authService.RefreshTokens(request.UserId, request.RefreshToken);
             if (newTokens == null)
             {
-                return Unauthorized(new { message = "Invalid refresh token" });
+                return BadRequest(new { message = "Invalid refresh token" });
             }
             return Ok(newTokens);
         }
