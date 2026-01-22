@@ -3,7 +3,7 @@ import axios from 'axios';
 const isProduction = import.meta.env.PROD;
 const getBaseURL = () => {
     if (isProduction) {
-        return import.meta.env.VITE_API_BASE_URL || process.env.VITE_API_BASE_URL || 'https://localhost:7034';
+        return import.meta.env.VITE_API_BASE_URL;
     }
     return 'https://localhost:7034';
 };
