@@ -76,6 +76,7 @@
         "password_modal": {
             "title": "Password Change Required",
             "desc": "This is your first login. For security reasons, you must change your password.",
+            "old_password": "Old Password",
             "new_password": "New Password",
             "confirm_password": "Confirm New Password",
             "submit": "Change Password",
@@ -95,6 +96,7 @@
         "change_password": "Change Password",
         "password_modal": {
             "title": "Change Password",
+            "old_password": "Old Password",
             "new_password": "New Password",
             "confirm_password": "Confirm New Password",
             "submit": "Save New Password",

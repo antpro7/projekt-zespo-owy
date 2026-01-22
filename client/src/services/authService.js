@@ -27,9 +27,20 @@ export const login = async (email, password) => {
     }
 };
 
-export const logout = () => {
-    state.user = null;
-    localStorage.removeItem('user');
+export const logout = async (id) => {
+    // Use the passed id, or fallback to the current user's id in state
+    const userId = id || state.user?.id;
+
+    try {
+        if (userId) {
+            await api.post(`/api/Auth/logout/${userId}`);
+        }
+    } catch (error) {
+        console.error('Logout failed', error);
+    } finally {
+        state.user = null;
+        localStorage.removeItem('user');
+    }
 };
 
 export const getCurrentUser = () => state.user;
@@ -70,10 +81,23 @@ export const updatePassword = async (id, newPassword) => {
 
 export const resetPassword = async (id) => {
     try {
-        // Default password as per requirement (or convention)
-        return await updatePassword(id, 'password');
+        const response = await api.patch(`/api/Auth/resetPassword/${id}`);
+        return response;
     } catch (error) {
         console.error(`Error resetting password for user ${id}:`, error);
-        return false;
+        return error.response;
+    }
+};
+export const changeUserPassword = async (userId, oldPassword, newPassword) => {
+    try {
+        const response = await api.post(`/api/Auth/changePassword`, {
+            userId: userId,
+            oldPassword: oldPassword,
+            newPassword: newPassword
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error changing password for user ${userId}:`, error);
+        throw error;
     }
 };

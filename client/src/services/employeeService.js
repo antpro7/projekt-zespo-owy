@@ -42,9 +42,13 @@ export const getEmployeesByManagerId = async (managerId) => {
 };
 
 export const createEmployee = async (employee) => {
-    console.warn('createEmployee: Backend does not provide a create user endpoint in the provided list. Please check if Registration endpoint exists.');
-    // If there is no specific endpoint, we might return null or throw error.
-    return null;
+    try {
+        const response = await api.post('/api/Users/add', employee);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating employee:', error);
+        return null;
+    }
 };
 
 export const updateEmployee = async (id, employee) => {
@@ -58,6 +62,11 @@ export const updateEmployee = async (id, employee) => {
 };
 
 export const deleteEmployee = async (id) => {
-    console.warn('deleteEmployee: Backend does not provide a delete user endpoint.');
-    return false;
+    try {
+        await api.delete(`/api/Users/${id}`);
+        return true;
+    } catch (error) {
+        console.error(`Error deleting employee ${id}:`, error);
+        return false;
+    }
 };

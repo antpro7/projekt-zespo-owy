@@ -8,7 +8,6 @@
     <table class="table table-striped table-hover">
       <thead>
         <tr>
-          <th>{{ $t('admin.employees.table.id') }}</th>
           <th>{{ $t('admin.employees.table.firstName') }}</th>
           <th>{{ $t('admin.employees.table.lastName') }}</th>
           <th>{{ $t('admin.employees.table.email') }}</th>
@@ -19,7 +18,6 @@
       </thead>
       <tbody>
         <tr v-for="employee in employees" :key="employee.id">
-          <td>{{ employee.id }}</td>
           <td>{{ employee.firstName }}</td>
           <td>{{ employee.lastName }}</td>
           <td>{{ employee.email }}</td>
@@ -28,8 +26,9 @@
           </td>
           <td>{{ employee.position }}</td>
           <td>
-            <button class="btn btn-sm btn-outline-secondary me-4" @click="openModal(employee)">{{ $t('common.edit') }}</button>
-            <button class="btn btn-sm btn-outline-dark" @click="handleResetPassword(employee.id, employee.firstName, employee.lastName)">{{ $t('admin.employees.reset_password') }}</button>
+            <button class="btn btn-sm btn-outline-secondary me-2" @click="openModal(employee)">{{ $t('common.edit') }}</button>
+            <button class="btn btn-sm btn-outline-dark me-2" @click="handleResetPassword(employee.id, employee.firstName, employee.lastName)">{{ $t('admin.employees.reset_password') }}</button>
+            <button class="btn btn-sm btn-outline-danger" @click="handleDeleteEmployee(employee.id, employee.firstName, employee.lastName)">{{ $t('common.delete') }}</button>
           </td>
         </tr>
       </tbody>
@@ -108,7 +107,7 @@
 
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
-import { getEmployees, createEmployee, updateEmployee, getManagers } from '../../services/employeeService';
+import { getEmployees, createEmployee, updateEmployee, getManagers, deleteEmployee } from '../../services/employeeService';
 import { getCurrentUser, resetPassword } from '../../services/authService';
 import { Modal } from 'bootstrap';
 
@@ -177,8 +176,23 @@ const saveEmployee = async () => {
 
 const handleResetPassword = async (id, firstName, lastName) => {
     if (confirm(`Are you sure you want to reset password for ${firstName} ${lastName}?`)) {
-        await resetPassword(id);
-        alert(`Password for ${firstName} ${lastName} has been reset to 'password'. User will be required to change it on next login.`);
+        const response = await resetPassword(id);
+        if (response && response.status === 200) {
+            alert(response.data.message || 'Password reset successfully.');
+        } else {
+             alert('Something went wrong. Password not reset.');
+        }
+    }
+};
+
+const handleDeleteEmployee = async (id, firstName, lastName) => {
+    if (confirm(`Are you sure you want to delete ${firstName} ${lastName}? This action cannot be undone.`)) {
+        const success = await deleteEmployee(id);
+        if (success) {
+            await loadEmployees();
+        } else {
+            alert('Failed to delete employee.');
+        }
     }
 };
 
