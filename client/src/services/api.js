@@ -29,7 +29,8 @@ api.interceptors.response.use(response => {
             const user = JSON.parse(localStorage.getItem('user'));
             if (user && user.tokens && user.tokens.refreshToken) {
 
-                const response = await axios.post('https://localhost:7034/api/Auth/refreshToken', {
+                const response = await api.post('/api/Auth/refreshToken', {
+                    userId: user.id,
                     refreshToken: user.tokens.refreshToken
                 }, {
                     headers: { 'Content-Type': 'application/json' }
