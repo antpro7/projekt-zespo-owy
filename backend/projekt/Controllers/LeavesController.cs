@@ -93,5 +93,24 @@ namespace projekt.Controllers
                 return StatusCode(500, new { message = "Błąd bazy danych", error = ex.Message });
             }
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteLeave(int id)
+        {
+            try
+            {
+                var leave = await _context.LeaveRequests.FindAsync(id);
+                if (leave == null)
+                {
+                    return NotFound(new { message = "Nie znaleziono wniosku" });
+                }
+                _context.LeaveRequests.Remove(leave);
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Wniosek usunięty pomyślnie" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Błąd serwera: {ex.Message}");
+            }
+        }
     }
 }

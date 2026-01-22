@@ -120,5 +120,24 @@ namespace projekt.Controllers
                 return StatusCode(500, $"Błąd serwera: {ex.Message}");
             }
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            try
+            {
+                var user = await _context.Users.FindAsync(id);
+                if (user == null)
+                {
+                    return NotFound(new { message = "Nie znaleziono użytkownika" });
+                }
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Użytkownik usunięty pomyślnie" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Błąd serwera: {ex.Message}");
+            }
+        }
     }
 }
