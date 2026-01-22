@@ -1,7 +1,15 @@
 import axios from 'axios';
 
+const isProduction = import.meta.env.PROD;
+const getBaseURL = () => {
+    if (isProduction) {
+        return import.meta.env.VITE_API_BASE_URL || process.env.VITE_API_BASE_URL || 'https://localhost:7034';
+    }
+    return 'https://localhost:7034';
+};
+
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || 'https://localhost:7034',
+    baseURL: getBaseURL(),
     headers: {
         'Content-Type': 'application/json'
     }
