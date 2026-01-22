@@ -45,6 +45,40 @@ builder.Services.AddAuthentication(options =>
 
         ClockSkew = TimeSpan.FromSeconds(5)
     };
+    options.Events = new JwtBearerEvents
+    {
+        OnTokenValidated = async context =>
+        {
+            // Pobierz authService z DI
+            var authService = context.HttpContext.RequestServices
+                .GetRequiredService<projekt.Services.Interfaces.IAuthService>();
+
+            // Pobierz token z headera
+            var token = context.Request.Headers["Authorization"]
+                .FirstOrDefault()?.Split(" ").Last();
+
+            if (token != null)
+            {
+                // Sprawd? czy token istnieje w bazie i nie jest uniewa?niony
+                var isValidInDb = await authService.ValidateToken(token);
+
+                if (!isValidInDb)
+                {
+                    context.Fail("Token zosta? uniewa?niony lub nie istnieje w bazie.");
+                    return;
+                }
+            }
+        },
+
+        OnAuthenticationFailed = context =>
+        {
+            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+            {
+                context.Response.Headers.Add("Token-Expired", "true");
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 

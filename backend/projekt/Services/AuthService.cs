@@ -44,18 +44,18 @@ namespace projekt.Services
             }
             return await VerifyPassword(foundUser.Id, password);
         }
-        public async Task<bool> ValidateToken(int userId, string token)
+        public async Task<bool> ValidateToken(string token)
         {
             var userAuth = await _context.UserAuths
                 .AsNoTracking()
-                .Where(ua => ua.UserId == userId && !ua.IsRevoked && ua.ExpiresAt > DateTime.Now)
+                .Where(ua => ua.TokenHash == token && !ua.IsRevoked && ua.ExpiresAt > DateTime.Now)
                 .OrderByDescending(ua => ua.ExpiresAt)
                 .FirstOrDefaultAsync();
             if (userAuth == null)
             {
                 return false;
             }
-            return token == userAuth.TokenHash;
+            return true;
         }
         public async Task<bool> ValidateRefreshToken(int userId, string refreshToken)
         {

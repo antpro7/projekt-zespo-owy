@@ -7,7 +7,7 @@ namespace projekt.Services.Interfaces
     {
         Task<User> VerifyPassword(int userId, string password);
         Task<User> Authenticate(string email, string password);
-        Task<bool> ValidateToken(int userId, string token);
+        Task<bool> ValidateToken(string token);
         Task<bool> ValidateRefreshToken(int userId, string refreshToken);
         Task<AuthModel> GenerateTokensForUser(User user);
         Task<AuthModel> RefreshTokens(int userId, string refreshToken);
