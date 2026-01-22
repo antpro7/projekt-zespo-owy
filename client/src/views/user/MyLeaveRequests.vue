@@ -82,6 +82,11 @@ const submitRequest = async () => {
   const diffTime = Math.abs(end - start);
   const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
 
+  if(start > end) {
+    alert('End date must be after start date.');
+    return;
+  }
+
   const newRequest = {
     userId: user.id,
     firstName: user.firstName,
