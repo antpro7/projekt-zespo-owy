@@ -91,7 +91,7 @@
               </div>
               <div class="mb-3">
                 <label class="form-label">{{ $t('profile.hours') }}</label>
-                <input type="number" class="form-control" v-model="form.hours" required>
+                <input type="number" class="form-control" v-model="form.monthlyHours" required>
               </div>
               <div class="d-flex justify-content-end">
                 <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">{{ $t('common.cancel') }}</button>
@@ -126,7 +126,7 @@ const form = reactive({
   role: 'employee',
   position: '',
   contractType: 'UoP',
-  hours: 160,
+  monthlyHours: 160,
   managerId: ''
 });
 
@@ -152,7 +152,7 @@ const openModal = (employee = null) => {
       role: 'employee',
       position: '',
       contractType: 'UoP',
-      hours: 160,
+      monthlyHours: 160,
       managerId: ''
     });
   }
